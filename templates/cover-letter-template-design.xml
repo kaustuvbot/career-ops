@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Cover Letter Design Template (XML/Word format)
+  Office Open XML (ECMA-376) wordprocessingml
+
+  Design system:
+    Font:   Calibri body, Space Grotesk header (rendered via DM Sans fallback in HTML)
+    Page:   US Letter (12240 x 15840 twips), margins ~864 twips
+    Header: name large bold + recipient label/sublabel line + thin grey rule
+    Body:   11.5pt, line-height 1.7, color #2f2f2f
+
+  Use placeholders {{NAME}}, {{RECIPIENT_NAME}}, {{ROLE_TITLE}}, etc.
+-->
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
+  <w:body>
+
+    <!-- HEADER: NAME -->
+    <w:p>
+      <w:pPr><w:spacing w:after="80" w:before="0"/></w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Calibri" w:cs="Calibri" w:eastAsia="Calibri" w:hAnsi="Calibri"/>
+          <w:b/>
+          <w:bCs/>
+          <w:color w:val="1A1A2E"/>
+          <w:sz w:val="40"/>
+          <w:szCs w:val="40"/>
+        </w:rPr>
+        <w:t xml:space="preserve">{{NAME}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- HEADER: RECIPIENT / RE LINE -->
+    <w:p>
+      <w:pPr>
+        <w:pBdr><w:bottom w:val="single" w:color="E2E2E2" w:sz="6" w:space="3"/></w:pBdr>
+        <w:spacing w:after="320" w:before="0"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Calibri" w:cs="Calibri" w:eastAsia="Calibri" w:hAnsi="Calibri"/>
+          <w:b/>
+          <w:bCs/>
+          <w:color w:val="555555"/>
+          <w:sz w:val="21"/>
+          <w:szCs w:val="21"/>
+        </w:rPr>
+        <w:t xml:space="preserve">To: </w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Calibri" w:cs="Calibri" w:eastAsia="Calibri" w:hAnsi="Calibri"/>
+          <w:color w:val="777777"/>
+          <w:sz w:val="21"/>
+          <w:szCs w:val="21"/>
+        </w:rPr>
+        <w:t xml:space="preserve">{{RECIPIENT_NAME}}, {{RECIPIENT_COMPANY}}  ·  </w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Calibri" w:cs="Calibri" w:eastAsia="Calibri" w:hAnsi="Calibri"/>
+          <w:b/>
+          <w:bCs/>
+          <w:color w:val="555555"/>
+          <w:sz w:val="21"/>
+          <w:szCs w:val="21"/>
+        </w:rPr>
+        <w:t xml:space="preserve">Re: </w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Calibri" w:cs="Calibri" w:eastAsia="Calibri" w:hAnsi="Calibri"/>
+          <w:color w:val="777777"/>
+          <w:sz w:val="21"/>
+          <w:szCs w:val="21"/>
+        </w:rPr>
+        <w:t xml:space="preserve">{{ROLE_TITLE}} · {{CLIENT_SECTOR}} · {{CONTRACT_TYPE}} · Ref: {{REFERENCE}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- {{PARAGRAPHS}} — repeat body paragraphs -->
+
+    <w:p>
+      <w:pPr><w:spacing w:after="280" w:before="0"/></w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Calibri" w:cs="Calibri" w:eastAsia="Calibri" w:hAnsi="Calibri"/>
+          <w:color w:val="2F2F2F"/>
+          <w:sz w:val="23"/>
+          <w:szCs w:val="23"/>
+        </w:rPr>
+        <w:t xml:space="preserve">{{GREETING}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr><w:spacing w:after="280" w:before="0"/></w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Calibri" w:cs="Calibri" w:eastAsia="Calibri" w:hAnsi="Calibri"/>
+          <w:color w:val="2F2F2F"/>
+          <w:sz w:val="23"/>
+          <w:szCs w:val="23"/>
+        </w:rPr>
+        <w:t xml:space="preserve">{{PARAGRAPH}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- SIGNOFF -->
+    <w:p>
+      <w:pPr><w:spacing w:after="80" w:before="280"/></w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Calibri" w:cs="Calibri" w:eastAsia="Calibri" w:hAnsi="Calibri"/>
+          <w:color w:val="2F2F2F"/>
+          <w:sz w:val="23"/>
+          <w:szCs w:val="23"/>
+        </w:rPr>
+        <w:t xml:space="preserve">Best regards,</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr><w:spacing w:after="40" w:before="0"/></w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Calibri" w:cs="Calibri" w:eastAsia="Calibri" w:hAnsi="Calibri"/>
+          <w:b/>
+          <w:bCs/>
+          <w:color w:val="1A1A2E"/>
+          <w:sz w:val="23"/>
+          <w:szCs w:val="23"/>
+        </w:rPr>
+        <w:t xml:space="preserve">{{NAME}}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr><w:spacing w:after="0" w:before="0"/></w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Calibri" w:cs="Calibri" w:eastAsia="Calibri" w:hAnsi="Calibri"/>
+          <w:color w:val="555555"/>
+          <w:sz w:val="21"/>
+          <w:szCs w:val="21"/>
+        </w:rPr>
+        <w:t xml:space="preserve">{{EMAIL}}  ·  {{PHONE}}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr><w:spacing w:after="0" w:before="0"/></w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Calibri" w:cs="Calibri" w:eastAsia="Calibri" w:hAnsi="Calibri"/>
+          <w:color w:val="555555"/>
+          <w:sz w:val="21"/>
+          <w:szCs w:val="21"/>
+        </w:rPr>
+        <w:t xml:space="preserve">{{LINKEDIN}}  ·  {{GITHUB}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- PAGE SETUP: US Letter -->
+    <w:sectPr>
+      <w:pgSz w:w="12240" w:h="15840" w:orient="portrait"/>
+      <w:pgMar w:top="864" w:right="864" w:bottom="864" w:left="864" w:header="708" w:footer="708" w:gutter="0"/>
+      <w:pgNumType/>
+      <w:docGrid w:linePitch="360"/>
+    </w:sectPr>
+  </w:body>
+</w:document>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Career Ops Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f8fafc;color:#0f172a;min-height:100vh;display:flex;flex-direction:column}
+header{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+h1{font-size:15px;font-weight:600}
+h1 span{color:#64748b;font-weight:400}
+.stats{display:flex;gap:20px;font-size:13px;color:#64748b}
+.stats strong{color:#0f172a;font-weight:600}
+.filters{background:#fff;border-bottom:1px solid #e2e8f0;padding:8px 24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.lbl{font-size:12px;color:#64748b;white-space:nowrap}
+select,input{height:30px;padding:0 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:12px;background:#fff;color:#0f172a}
+select:focus,input:focus{border-color:#94a3b8;outline:none}
+input[type=text]{width:120px}
+.filt-co{width:120px}.filt-ro{width:170px}
+.table-wrap{flex:1;overflow:auto;padding:12px 24px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:7px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);font-size:13px}
+thead{position:sticky;top:0;z-index:1}
+th{background:#f1f5f9;padding:9px 10px;text-align:left;font-size:11px;font-weight:600;color:#64748b;border-bottom:1px solid #e2e8f0;white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{background:#e2e8f0}
+td{padding:8px 10px;border-bottom:1px solid #e2e8f0;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8fafc}
+tr.s50 td{background:rgba(34,197,94,.04)}
+tr.s45 td,tr.s44 td,tr.s43 td,tr.s42 td,tr.s41 td,tr.s40 td{background:rgba(134,239,172,.05)}
+tr.s39 td,tr.s38 td,tr.s37 td,tr.s36 td,tr.s35 td{background:rgba(234,179,8,.04)}
+.sco{display:inline-block;padding:2px 7px;border-radius:9px;font-size:11px;font-weight:600}
+.sco.g{background:#22c55e;color:#fff}
+.sco.lg{background:#86efac;color:#166534}
+.sco.y{background:#eab308;color:#fff}
+.sco.r{background:#ef4444;color:#fff}
+.sel{border:none;background:transparent;font-size:12px;padding:2px 4px;border-radius:4px;cursor:pointer}
+.sel:focus{background:#f1f5f9;outline:none}
+.but{width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #e2e8f0;border-radius:4px;background:#fff;cursor:pointer;text-decoration:none;font-size:10px;color:#64748b}
+.but:hover{background:#f1f5f9;color:#0f172a}
+.but.url{color:#3b82f6}
+.but.url:hover{background:#eff6ff}
+.pad{color:#94a3b8;font-size:12px}
+/* panel */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:opacity .2s;z-index:100}
+.ov.o{opacity:1;pointer-events:auto}
+.pn{position:fixed;top:0;right:0;width:480px;max-width:100%;height:100vh;background:#fff;box-shadow:-4px 0 20px rgba(0,0,0,.1);transform:translateX(100%);transition:transform .2s;z-index:101;display:flex;flex-direction:column;overflow:hidden}
+.pn.o{transform:translateX(0)}
+.ph{padding:12px 16px;border-bottom:1px solid #e2e8f0;display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0}
+.pt{font-size:13px;font-weight:600;line-height:1.3}
+.ps{font-size:11px;color:#64748b;margin-top:2px}
+.xb{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border:1px solid #e2e8f0;border-radius:4px;background:none;cursor:pointer;font-size:12px;color:#64748b;flex-shrink:0;margin-left:8px}
+.xb:hover{background:#f1f5f9}
+.tabs{display:flex;border-bottom:1px solid #e2e8f0;flex-shrink:0}
+.tab{padding:8px 14px;font-size:12px;font-weight:500;border:none;border-bottom:2px solid transparent;background:none;cursor:pointer;color:#64748b}
+.tab.o{color:#0f172a;border-bottom-color:#0f172a}
+.pc{flex:1;overflow:auto;padding:14px}
+.pk{font-size:12px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px}
+.pk:first-child{margin-top:0}
+.pp{margin:5px 0;line-height:1.5;font-size:12px}
+.pl{list-style:none;padding:0;margin:5px 0}
+.pl li{margin:3px 0 3px 14px}
+.pl li::before{content:'– '}
+.pa{color:#3b82f6;text-decoration:none;font-size:12px}
+.pa:hover{text-decoration:underline}
+.badg{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;margin-left:4px}
+.badg.g{background:#22c55e;color:#fff}
+.badg.lg{background:#86efac;color:#166534}
+.badg.y{background:#eab308;color:#fff}
+.badg.r{background:#ef4444;color:#fff}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%) translateY(60px);background:#0f172a;color:#fff;padding:8px 16px;border-radius:7px;font-size:12px;z-index:200;transition:transform .2s;white-space:nowrap}
+.toast.o{transform:translateX(-50%) translateY(0)}
+.sc{font-size:11px;color:#64748b;padding:2px 6px;border:1px solid #e2e8f0;border-radius:4px}
+.sc.g{background:rgba(34,197,94,.1);border-color:#86efac}
+.sc.lg{background:rgba(134,239,172,.15);border-color:#86efac}
+.sc.y{background:rgba(234,179,8,.1);border-color:#fde047}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:2px}
+.msg{text-align:center;padding:40px;color:#94a3b8;font-size:13px}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Career Ops <span>— Application Tracker</span></h1>
+<div class=stats>
+<span><strong id=cnt>-</strong> apps</span>
+<span>Avg <strong id=avg>-</strong>/5</span>
+</div>
+</header>
+
+<div class=filters>
+<span class=lbl>Score</span>
+<select id=sf>
+<option value=all>All<option value=a45>4.5+<option value=a40>4.0+<option value=a35>3.5+
+</select>
+<span class=lbl>Company</span>
+<input type=text id=cf placeholder=Filter... class=filt-co>
+<span class=lbl>Role</span>
+<input type=text id=rf placeholder=Filter... class=filt-ro>
+<span class=lbl>Status</span>
+<select id=stf>
+<option value=all>All<option value=Evaluated>Evaluated<option value=Applied>Applied<option value=Interview>Interview<option value=Offer>Offer<option value=Rejected>Rejected<option value=Discarded>Discarded<option value=SKIP>SKIP
+</select>
+</div>
+
+<div class=table-wrap>
+<table>
+<thead>
+<tr>
+<th>Score</th>
+<th>#</th>
+<th>Company</th>
+<th>Role</th>
+<th>Status</th>
+<th>Report</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody id=tb></tbody>
+</table>
+</div>
+
+<div class=ov id=ov></div>
+<div class=pn id=pn>
+<div class=ph>
+<div>
+<div class=pt id=pt></div>
+<div class=ps id=ps></div>
+</div>
+<button class=xb id=xb>×</button>
+</div>
+<div class=tabs>
+<button class="tab o" id=tr>Report</button>
+<button class=tab id=tc>Cover Letter</button>
+</div>
+<div class=pc id=pc></div>
+</div>
+
+<div class=toast id=to></div>
+
+<script>
+(function(){
+var D=[
+{s:2.2/5,n:"64",c:"Deepgram",r:"Solutions Architect (EST or PST)",st:"Evaluated",p:"❌",ln:"../reports/001-deepgram-solutions-architect-est-pst-2026-06-20.md",u:"https://jobs.ashbyhq.com/deepgram/844ec2d9-4256-4be0-a6c6-78ebf1391a78"},
+{s:3.8/5,n:"65",c:"Deepgram",r:"Senior Solutions Architect - Europe",st:"Evaluated",p:"✅",ln:"../reports/002-deepgram-senior-solutions-architect-europe-2026-06-20.md",u:"https://jobs.ashbyhq.com/deepgram/9cb09363-9b68-4957-869a-da70b95ad6bd"},
+{s:2.4/5,n:"66",c:"Deepgram",r:"SRE - AI & ML Infrastructure",st:"Evaluated",p:"❌",ln:"../reports/003-deepgram-sre-ai-ml-infrastructure-2026-06-20.md",u:"https://jobs.ashbyhq.com/deepgram/f424ef6a-c27f-4984-9e77-40a1ad16ae28"},
+{s:2.5/5,n:"67",c:"Deepgram",r:"ML Ops Infrastructure Engineer",st:"Evaluated",p:"❌",ln:"../reports/004-deepgram-ml-ops-infrastructure-engineer-2026-06-20.md",u:"https://jobs.ashbyhq.com/deepgram/7ced4c1f-4126-44fe-9cf1-da427a9e4e3e"},
+{s:1.9/5,n:"68",c:"Deepgram",r:"Network Engineer, Real-Time Infrastructure",st:"Evaluated",p:"❌",ln:"../reports/005-deepgram-network-engineer-real-time-infrastructure-2026-06-20.md",u:"https://jobs.ashbyhq.com/deepgram/b4c48280-9b6c-4545-be49-b33e0b6076cd"},
+{s:2.7/5,n:"69",c:"Deepgram",r:"Systems Architect AI/ML Infrastructure",st:"Evaluated",p:"❌",ln:"../reports/006-deepgram-systems-architect-ai-ml-infrastructure-2026-06-20.md",u:"https://jobs.ashbyhq.com/deepgram/ff392127-1eb6-4fc7-838e-a3243923ba76"},
+{s:3.6/5,n:"70",c:"Anthropic",r:"Senior Staff+ Software Engineer, Kubernetes Platform",st:"Evaluated",p:"✅",ln:"../reports/007-anthropic-senior-staff-plus-kubernetes-platform-2026-06-20.md",u:"https://job-boards.greenhouse.io/anthropic/jobs/5211305008"},
+{s:2.5/5,n:"71",c:"Anthropic",r:"Software Engineer, Safeguards Infrastructure",st:"Evaluated",p:"❌",ln:"../reports/008-anthropic-software-engineer-safeguards-infrastructure-2026-06-20.md",u:"https://job-boards.greenhouse.io/anthropic/jobs/5074908008"},
+{s:3.4/5,n:"72",c:"Anthropic",r:"Staff+ Infrastructure Engineer, Cluster Infrastructure",st:"Evaluated",p:"✅",ln:"../reports/009-anthropic-staff-plus-infrastructure-engineer-cluster-2026-06-20.md",u:"https://job-boards.greenhouse.io/anthropic/jobs/5211297008"},
+{s:3.5/5,n:"73",c:"Anthropic",r:"Staff Software Engineer, AI Reliability Engineering",st:"Evaluated",p:"✅",ln:"../reports/010-anthropic-staff-software-engineer-ai-reliability-engineering-2026-06-20.md",u:"https://job-boards.greenhouse.io/anthropic/jobs/5101173008"},
+{s:2.2/5,n:"74",c:"Anthropic",r:"Staff Software Engineer, Infrastructure Asset Systems",st:"Evaluated",p:"❌",ln:"../reports/011-anthropic-staff-software-engineer-infrastructure-asset-systems-2026-06-20.md",u:"https://job-boards.greenhouse.io/anthropic/jobs/5237762008"},
+{s:2.6/5,n:"75",c:"Anthropic",r:"IT Systems Engineer, Client Platform Engineer",st:"Evaluated",p:"❌",ln:"../reports/012-anthropic-it-systems-engineer-client-platform-2026-06-20.md",u:"https://job-boards.greenhouse.io/anthropic/jobs/5255853008"},
+{s:3.4/5,n:"13",c:"Intercom",r:"AI Infrastructure Engineer",st:"Evaluated",p:"❌",ln:"../reports/013-intercom-2026-06-20.md",u:"https://job-boards.greenhouse.io/intercom/jobs/7824137"},
+{s:2.6/5,n:"14",c:"Intercom",r:"Engineering Manager, AI Models Infrastructure",st:"Evaluated",p:"❌",ln:"../reports/014-intercom-2026-06-20.md",u:"https://job-boards.greenhouse.io/intercom/jobs/7784684"},
+{s:2.4/5,n:"15",c:"Airtable",r:"Senior Partner Solutions Architect",st:"Evaluated",p:"❌",ln:"../reports/015-airtable-2026-06-20.md",u:"https://job-boards.greenhouse.io/airtable/jobs/8461582002"},
+{s:2.7/5,n:"16",c:"Airtable",r:"Senior Solutions Architect",st:"Evaluated",p:"❌",ln:"../reports/016-airtable-2026-06-20.md",u:"https://job-boards.greenhouse.io/airtable/jobs/8498915002"},
+{s:2.5/5,n:"17",c:"Airtable",r:"Senior Solutions Architect- West Coast",st:"Evaluated",p:"❌",ln:"../reports/017-airtable-2026-06-20.md",u:"https://job-boards.greenhouse.io/airtable/jobs/8597941002"},
+{s:3.0/5,n:"18",c:"Airtable",r:"Software Engineer, Infrastructure (8+ YOE)",st:"Evaluated",p:"❌",ln:"../reports/018-airtable-2026-06-20.md",u:"https://job-boards.greenhouse.io/airtable/jobs/8400388002"},
+{s:4.6/5,n:"19",c:"ElevenLabs",r:"Infrastructure Security Engineer",st:"Evaluated",p:"✅",ln:"../reports/019-elevenlabs-2026-06-20.md",u:"https://jobs.ashbyhq.com/elevenlabs/687394d7-fbf8-49ed-822e-c0690191330c"},
+{s:2.4/5,n:"20",c:"Vercel",r:"Senior Manager, Solutions Architect",st:"Evaluated",p:"❌",ln:"../reports/020-vercel-2026-06-20.md",u:"https://job-boards.greenhouse.io/vercel/jobs/5995789004"},
+{s:2.2/5,n:"21",c:"Vercel",r:"Solutions Architect",st:"Evaluated",p:"❌",ln:"../reports/021-vercel-2026-06-20.md",u:"https://job-boards.greenhouse.io/vercel/jobs/5804110004"},
+{s:2.0/5,n:"22",c:"Arize AI",r:"Senior DevOps Engineer, APJ",st:"Evaluated",p:"❌",ln:"../reports/022-arizeai-2026-06-20.md",u:""},
+{s:3.7/5,n:"23",c:"RunPod",r:"Site Reliability Engineer",st:"Evaluated",p:"❌",ln:"../reports/023-runpod-2026-06-20.md",u:"https://job-boards.greenhouse.io/runpod/jobs/5229443008"},
+{s:3.0/5,n:"24",c:"Glean",r:"Solutions Architect",st:"Evaluated",p:"❌",ln:"../reports/024-glean-2026-06-20.md",u:"https://job-boards.greenhouse.io/gleanwork/jobs/4508312005"},
+{s:3.4/5,n:"37",c:"Trade Republic",r:"Senior Kafka Platform Engineer",st:"Evaluated",p:"❌",ln:"../reports/037-trade-republic-senior-kafka-platform-engineer-2026-06-20.md",u:"https://traderepublic.com/en-de/about?jobId=7685052003&gh_jid=7685052003"},
+{s:3.6/5,n:"38",c:"Photoroom",r:"Senior Site Reliability Engineer",st:"Evaluated",p:"❌",ln:"../reports/038-photoroom-senior-sre-2026-06-20.md",u:"https://jobs.ashbyhq.com/photoroom/0138732d-6f29-4332-bcc7-de9d680e4d39"},
+{s:3.9/5,n:"39",c:"Wayve",r:"Senior Cloud SRE - AI/ML Platform & GPU Compute",st:"Evaluated",p:"❌",ln:"../reports/039-wayve-senior-cloud-sre-2026-06-20.md",u:"https://wayve.firststage.co/jobs?gh_jid=8458272002"},
+{s:4.1/5,n:"40",c:"Wayve",r:"Senior Platform Engineer",st:"Evaluated",p:"✅",ln:"../reports/040-wayve-senior-platform-engineer-2026-06-20.md",u:"https://wayve.firststage.co/jobs?gh_jid=8564314002"},
+{s:3.5/5,n:"41",c:"Wayve",r:"Staff Cloud SRE - AI/ML Platform & GPU Compute",st:"Evaluated",p:"✅",ln:"../reports/041-wayve-staff-cloud-sre-2026-06-20.md",u:"https://wayve.firststage.co/jobs?gh_jid=8537458002"},
+{s:3.2/5,n:"42",c:"Wayve",r:"Staff Data Platform Engineer",st:"Evaluated",p:"❌",ln:"../reports/042-wayve-staff-data-platform-engineer-2026-06-20.md",u:"https://wayve.firststage.co/jobs?gh_jid=8564304002"},
+{s:3.2/5,n:"49",c:"Lovable",r:"Solutions Architect London/Stockholm",st:"Evaluated",p:"❌",ln:"../reports/049-lovable-2026-06-20.md",u:"https://jobs.ashbyhq.com/lovable/642dfe37-d5f5-4cf7-a38d-d6dac3dde58f"},
+{s:3.6/5,n:"50",c:"Amplemarket",r:"Spontaneous Application Infrastructure Engineer",st:"Evaluated",p:"❌",ln:"../reports/050-amplemarket-2026-06-20.md",u:"https://job-boards.eu.greenhouse.io/amplemarket/jobs/4066888101"},
+{s:3.0/5,n:"51",c:"Perplexity",r:"Member of Technical Staff AI Infrastructure Engineer",st:"Evaluated",p:"❌",ln:"../reports/051-perplexity-2026-06-20.md",u:"https://jobs.ashbyhq.com/perplexity/60deb376-51b5-46c6-9e17-55377a5ef34e"},
+{s:3.4/5,n:"52",c:"Perplexity",r:"Member of Technical Staff Cloud Infrastructure",st:"Evaluated",p:"❌",ln:"../reports/052-perplexity-cloud-infrastructure-2026-06-20.md",u:"https://jobs.ashbyhq.com/perplexity/e028e104-e070-4a62-85f2-ebcf982889ea"},
+{s:3.7/5,n:"53",c:"Supabase",r:"Platform Engineer Multicloud",st:"Evaluated",p:"❌",ln:"../reports/053-supabase-platform-multicloud-2026-06-20.md",u:"https://jobs.ashbyhq.com/supabase/847a7bd7-6b75-444a-aeda-d0b28a11c764"},
+{s:3.8/5,n:"54",c:"Supabase",r:"Site Reliability Engineer",st:"Evaluated",p:"❌",ln:"../reports/054-supabase-sre-2026-06-20.md",u:"https://jobs.ashbyhq.com/supabase/ed6cedb1-b9bf-4609-ac5c-c75c33b31bf3"},
+{s:3.0/5,n:"55",c:"Pigment",r:"Solutions Architect UK",st:"Evaluated",p:"❌",ln:"../reports/055-pigment-2026-06-20.md",u:"https://jobs.lever.co/pigment/fb659c21-bd62-4b67-ade9-1b7f55e7f1cf"},
+{s:2.6/5,n:"56",c:"Spotify",r:"C++ Engineer Platform Engineering",st:"Evaluated",p:"❌",ln:"../reports/056-spotify-cpp-2026-06-20.md",u:"https://jobs.lever.co/spotify/361e8a26-1386-477f-bfd0-c819ba863be3"},
+{s:3.4/5,n:"57",c:"Spotify",r:"Staff Engineer Content Intelligence Infrastructure",st:"Evaluated",p:"❌",ln:"../reports/057-spotify-staff-content-intelligence-2026-06-20.md",u:"https://jobs.lever.co/spotify/0841fdc0-1702-4ef6-b665-8a825112696c"},
+{s:2.2/5,n:"58",c:"Palantir",r:"Backend Software Engineer - Infrastructure",st:"Evaluated",p:"❌",ln:"../reports/058-palantir-backend-infra-2026-06-20.md",u:"https://jobs.lever.co/palantir/f70cdff7-c62f-4b73-a136-909e5e3d1891"},
+{s:3.8/5,n:"59",c:"Palantir",r:"Forward Deployed Reliability Engineer",st:"Evaluated",p:"❌",ln:"../reports/059-palantir-fdie-ukgov-2026-06-20.md",u:"https://jobs.lever.co/palantir/5a99fe16-1bda-4313-ace2-a11ea6e58f0c"},
+{s:2.8/5,n:"60",c:"Palantir",r:"Site Reliability Operations Analyst UK Government",st:"Evaluated",p:"❌",ln:"../reports/060-palantir-sroa-ukgov-2026-06-20.md",u:"https://jobs.lever.co/palantir/98bbe55b-f591-4272-a486-d82404d2c576"},
+{s:2.4/5,n:"61",c:"Stability AI",r:"Senior Product Engineer Growth & Lifecycle",st:"SKIP",p:"❌",ln:"../reports/061-stability-ai-2026-06-20.md",u:"http://stability.ai/careers?gh_jid=4886027101"},
+{s:2.8/5,n:"62",c:"Hugging Face",r:"Data/Infrastructure Advocate Engineer - US Remote",st:"SKIP",p:"❌",ln:"../reports/062-hugging-face-2026-06-20.md",u:"https://apply.workable.com/huggingface/jobs/view/CEACA06A2D"},
+{s:2.6/5,n:"63",c:"Supabase",r:"Product Manager - Infrastructure",st:"SKIP",p:"❌",ln:"../reports/063-supabase-2026-06-20.md",u:"https://jobs.ashbyhq.com/supabase/47bcfdb8-b954-423e-8a9e-85256434575c"}
+];
+
+var sfEl=document.getElementById('sf');
+var cfEl=document.getElementById('cf');
+var rfEl=document.getElementById('rf');
+var stfEl=document.getElementById('stf');
+var tbEl=document.getElementById('tb');
+var cntEl=document.getElementById('cnt');
+var avgEl=document.getElementById('avg');
+var ovEl=document.getElementById('ov');
+var pnEl=document.getElementById('pn');
+var ptEl=document.getElementById('pt');
+var psEl=document.getElementById('ps');
+var xbEl=document.getElementById('xb');
+var trEl=document.getElementById('tr');
+var tcEl=document.getElementById('tc');
+var pcEl=document.getElementById('pc');
+var toEl=document.getElementById('to');
+
+var curRow=null;
+var curTab='report';
+
+function sc(s){
+if(s>=4.5)return'g';
+if(s>=4.0)return'lg';
+if(s>=3.5)return'y';
+return'r';
+}
+function badge(s){
+if(s>=4.0)return'<span class="badg '+sc(s)+'">apply</span>';
+if(s>=3.5)return'<span class="badg y">cons.</span>';
+return'<span class="badg r">pass</span>';
+}
+function trunc(s,n){
+if(!s)return'';
+return s.length>n?s.slice(0,n)+'…':s;
+}
+function stOpts(cur){
+var ss=['Evaluated','Applied','Interview','Offer','Rejected','Discarded','SKIP'];
+var h='';
+for(var i=0;i<ss.length;i++){
+h+='<option value="'+ss[i]+'"'+(ss[i]===cur?' selected':'')+'>'+ss[i]+'</option>';
+}
+return h;
+}
+function r(){
+var fv=sfEl.value;
+var cv=cfEl.value.toLowerCase();
+var rv=rfEl.value.toLowerCase();
+var sv=stfEl.value;
+var filtered=D.filter(function(r){
+if(fv==='a45'&&r.s<4.5)return false;
+if(fv==='a40'&&r.s<4.0)return false;
+if(fv==='a35'&&r.s<3.5)return false;
+if(cv&&r.c.toLowerCase().indexOf(cv)===-1)return false;
+if(rv&&r.r.toLowerCase().indexOf(rv)===-1)return false;
+if(sv!=='all'&&r.st!==sv)return false;
+return true;
+});
+filtered.sort(function(a,b){return b.s-a.s;});
+cntEl.textContent=filtered.length;
+var a=filtered.length?(filtered.reduce(function(t,r){return t+r.s;},0)/filtered.length).toFixed(1):'—';
+avgEl.textContent=a;
+if(!filtered.length){
+tbEl.innerHTML='<tr><td colspan=7 class=msg>No matches</td></tr>';
+return;
+}
+var h='';
+for(var i=0;i<filtered.length;i++){
+var r=filtered[i];
+var cls='s'+Math.floor(r.s*10);
+h+='<tr class='+cls+'>';
+h+='<td><span class="sco '+sc(r.s)+'">'+r.s.toFixed(1)+badge(r.s)+'</span></td>';
+h+='<td>'+r.n+'</td>';
+h+='<td>'+r.c+'</td>';
+h+='<td title="'+r.r+'">'+trunc(r.r,30)+'</td>';
+h+='<td><select class=sel onchange="chg(this,\''+r.n+'\',\''+r.c.replace(/'/g,"\\'")+'\')">'+stOpts(r.st)+'</select></td>';
+h+='<td><a class=but href="'+r.ln+'" target=_blank>📄</a></td>';
+h+='<td><a class="but url" href="'+(r.u||r.ln)+'" target=_blank>🔗</a></td>';
+h+='</tr>';
+}
+tbEl.innerHTML=h;
+}
+function chg(el,num,company){
+var ns=el.value;
+for(var i=0;i<D.length;i++){
+if(D[i].n===num&&D[i].c===company){D[i].st=ns;break;}
+}
+r();
+to('Status: '+ns);
+}
+function det(num){
+for(var i=0;i<D.length;i++){
+if(D[i].n===num){curRow=D[i];break;}
+}
+if(!curRow)return;
+ptEl.textContent=curRow.c+' — '+curRow.r;
+var scCls=sc(curRow.s);
+psEl.innerHTML='<span class="sc '+scCls+'">'+curRow.s.toFixed(1)+'/5</span> '+curRow.st;
+trEl.className='tab'+(curTab==='report'?' o':'');
+tcEl.className='tab'+(curTab==='cover'?' o':'');
+ovEl.className='ov o';
+pnEl.className='pn o';
+pc(curTab);
+}
+function pc(tab){
+curTab=tab;
+trEl.className='tab'+(tab==='report'?' o':'');
+tcEl.className='tab'+(tab==='cover'?' o':'');
+if(!curRow){pcEl.innerHTML='<p class=msg>Select a row</p>';return;}
+var ln=curRow.ln;
+if(tab==='report'){
+pcEl.innerHTML='<p class=pk>Report</p><p class=pp>Open in editor or server:</p><p class=pp><a class=pa href="'+ln+'" target=_blank>'+ln+'</a></p>';
+}else{
+var cl='cover-letters/'+curRow.n+'-'+curRow.c.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.md';
+pcEl.innerHTML='<p class=pk>Cover Letter</p><p class=pp>Open in editor:</p><p class=pp><a class=pa href="'+cl+'" target=_blank>'+cl+'</a></p>';
+}
+}
+function url(num){
+for(var i=0;i<D.length;i++){
+if(D[i].n===num){curRow=D[i];break;}
+}
+if(!curRow)return;
+to('Fetching job URL…');
+pc('report');
+}
+function to(msg){
+toEl.textContent=msg;
+toEl.className='toast o';
+clearTimeout(window._tt);
+window._tt=setTimeout(function(){toEl.className='toast';},2800);
+}
+function close(){
+ovEl.className='ov';
+pnEl.className='pn';
+curRow=null;
+}
+ovEl.onclick=close;
+xbEl.onclick=close;
+trEl.onclick=function(){pc('report');};
+tcEl.onclick=function(){pc('cover');};
+sfEl.onchange=r;
+cfEl.oninput=r;
+rfEl.oninput=r;
+stfEl.onchange=r;
+r();
+window.chg=chg;
+})();
+</script>
+</body>
+</html>
